@@ -217,14 +217,14 @@ h1, h2 {
     <div class="card">
       <h3>CloudRetro</h3>
       <p>Open‑source / browser‑based retro cloud gaming</p>
-      <button onclick="launch('https://cloudretro.io', true)">Launch</button>
+      <button onclick="launch('https://cloudretro.io', true)">Launch CloudRetro</button>
     </div>
 
     <!-- Boosteroid -->
     <div class="card">
       <h3>Boosteroid</h3>
       <p>Browser‑based cloud‑gaming service</p>
-      <button onclick="launch('https://boosteroid.com', false)">Launch</button>
+      <button onclick="launch('https://boosteroid.com', false)">Launch Boosteroid</button>
     </div>
   </div>
 </div>
@@ -251,28 +251,24 @@ tabBtns.forEach(btn => {
   });
 });
 
-// Launch cloud gaming modal
-function launch(url, forceEmbed) {
-  const iframe = document.getElementById("viewerIframe");
-  const spinner = document.getElementById("spinner");
-  iframe.style.display = "none";
-  spinner.style.display = "block";
-  document.getElementById("viewerModal").style.display = "flex";
-  iframe.src = url;
+// Launch cloud gaming
+function launch(url, embedable) {
+  if(embedable) {
+    // Embedded modal for CloudRetro
+    const iframe = document.getElementById("viewerIframe");
+    const spinner = document.getElementById("spinner");
+    iframe.style.display = "none";
+    spinner.style.display = "block";
+    document.getElementById("viewerModal").style.display = "flex";
+    iframe.src = url;
 
-  iframe.onload = () => {
-    spinner.style.display = "none";
-    iframe.style.display = "block";
-  };
-
-  if (!forceEmbed) {
-    setTimeout(() => {
-      const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-      if (!iframeDoc || iframeDoc.body.innerHTML === "" || iframeDoc.body.innerHTML.includes("Refused")) {
-        window.open(url, "_blank");
-        closeViewer();
-      }
-    }, 1000);
+    iframe.onload = () => {
+      spinner.style.display = "none";
+      iframe.style.display = "block";
+    };
+  } else {
+    // Sites that block iframe (Boosteroid etc.)
+    window.open(url, "_blank");
   }
 }
 
